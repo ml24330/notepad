@@ -12,7 +12,6 @@ require('dotenv').config();
 // Init app
 
 const app = express();
-app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(cors());
 
@@ -37,12 +36,13 @@ app.use('/api/note', noteRouter);
 
 // Serve static assets
 
-app.use(express.static('build'));
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('build'));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-})
-
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+    })
+};
 
 // Start listening
 

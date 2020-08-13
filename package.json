@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon app.js",
-    "start": "node app.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm start"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
