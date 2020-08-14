@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const authMiddleware = require("../middleware");
 
 require("dotenv").config();
 
@@ -45,7 +46,7 @@ todoRouter.get("/:id", validateTodo, async(req, res) => {
 
 // Add a new todo
 
-todoRouter.post("/", async (req, res) => {
+todoRouter.post("/", authMiddleware, async (req, res) => {
     if(req.body.subject === null || req.body.duedate === null || req.body.description === null){
         return res.status(400).json("Missing arguments!");
     }
@@ -65,14 +66,14 @@ todoRouter.post("/", async (req, res) => {
 
 // Delete a todo
 
-todoRouter.delete("/:id", validateTodo, async (req, res) => {
+todoRouter.delete("/:id", authMiddleware, validateTodo, async (req, res) => {
     await req.todo.deleteOne();
     res.json(req.todo);
 })
 
 // Update a todo
 
-todoRouter.patch("/:id", validateTodo, async (req, res) => {
+todoRouter.patch("/:id", authMiddleware, validateTodo, async (req, res) => {
     if(!req.body.subject || !req.body.duedate || !req.body.description) return res.status(400).json("Missing fields!")
     const todo = await req.todo.updateOne(req.body);
     const updatedTodo = await Todo.find({ "_id":req.params.id });

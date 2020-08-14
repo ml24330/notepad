@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const authMiddleware = require("../middleware");
 
 require("dotenv").config();
 
@@ -56,7 +57,7 @@ noteRouter.get("/:classID/:noteID", validateClass, validateNote, async (req, res
 
 // Add a new note to given class
 
-noteRouter.post("/:classID", validateClass, async (req, res) => {
+noteRouter.post("/:classID", authMiddleware, validateClass, async (req, res) => {
     if(!req.body.title || !req.body.content) return res.status(400).json('Missing fields!')
     const newNote = new Note({
         "title": req.body.title,
@@ -72,7 +73,7 @@ noteRouter.post("/:classID", validateClass, async (req, res) => {
 
 // Delete a note
 
-noteRouter.delete("/:classID/:noteID", validateClass, validateNote, async (req, res) => {
+noteRouter.delete("/:classID/:noteID", authMiddleware, validateClass, validateNote, async (req, res) => {
     const newNotes = req.class.notes.filter(note => !(note._id.toString() === req.note._id.toString()));
     await req.class.updateOne({ "notes": newNotes });
     res.json(req.note);
@@ -81,7 +82,7 @@ noteRouter.delete("/:classID/:noteID", validateClass, validateNote, async (req, 
 
 // Update a note
 
-noteRouter.patch("/:classID/:noteID", validateClass, validateNote, async (req, res) => {
+noteRouter.patch("/:classID/:noteID", authMiddleware, validateClass, validateNote, async (req, res) => {
     if(!req.body.title || !req.body.content) return res.status(400).json("Missing fields!")
     const newNotes = req.class.notes.map(note => {
         if(note._id.toString() === req.params.noteID.toString()){

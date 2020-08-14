@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const authMiddleware = require("../middleware");
 
 require("dotenv").config();
 
@@ -45,7 +46,7 @@ classRouter.get("/:id", validateClass, async (req, res) => {
 
 // Add a new class
 
-classRouter.post("/", async (req, res) => {
+classRouter.post("/", authMiddleware, async (req, res) => {
     if(req.body.name === null){
         return res.status(400).json("Missing arguments!");
     }
@@ -67,7 +68,7 @@ classRouter.post("/", async (req, res) => {
 
 // Delete a class
 
-classRouter.delete("/:id", validateClass, async (req, res) => {
+classRouter.delete("/:id", authMiddleware, validateClass, async (req, res) => {
     await req.class.deleteOne();
     res.json(req.class);
 })
@@ -75,7 +76,7 @@ classRouter.delete("/:id", validateClass, async (req, res) => {
 
 // Update a class
 
-classRouter.patch("/:id", validateClass, async (req, res) => {
+classRouter.patch("/:id", authMiddleware, validateClass, async (req, res) => {
     if(!req.body.name || !req.body.start_date || !req.body.end_date) return res.status(400).json("Missing fields!")
     await req.class.updateOne(req.body);
     const updatedClass = await _Class.findOne({ "_id":req.params.id });
