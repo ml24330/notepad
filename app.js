@@ -44,6 +44,14 @@ if(process.env.NODE_ENV === 'production'){
     })
 };
 
+if(process.env.NODE_ENV === 'development'){
+    app.use(express.static(path.resolve(__dirname, 'client', 'public')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
+    });
+}
+
 // Start listening
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`));
