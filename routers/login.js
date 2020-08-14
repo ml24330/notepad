@@ -7,9 +7,9 @@ const loginRouter = express.Router();
 
 loginRouter.get("/", (req, res) => {
     if(req.headers.token === process.env.SECRET_TOKEN){
-        return res.status(200);
+        return res.status(200).json('Success!');
     }else{
-        return res.status(403);
+        return res.status(403).json('Invalid code!');
     }
 })
 
