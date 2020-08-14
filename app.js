@@ -5,6 +5,7 @@ const path = require('path');
 const todoRouter = require("./routers/todo.js");
 const classRouter = require("./routers/class.js");
 const noteRouter = require("./routers/note.js");
+const loginRouter = require("./routers/login.js");
 
 require('dotenv').config();
 
@@ -29,6 +30,7 @@ db.once('open', () => console.log('CONNECTION ESTABLISHED'));
 
 // Routing
 
+app.use('/api/login', loginRouter);
 app.use('/api/todo', todoRouter);
 app.use('/api/class', classRouter);
 app.use('/api/note', noteRouter);
